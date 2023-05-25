@@ -1,0 +1,90 @@
+﻿@model IEnumerable<HELMo_bilite.Models.Delivery>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LoadingLocation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnloadingLocation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryContent)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["LoadingDateSortParm"]">
+                    @Html.DisplayNameFor(model => model.LoadingDateTime)
+                    <i class="fas @(ViewData["LoadingDateSortParm"].ToString().EndsWith("desc") ? "fa-sort-down" : "fa-sort-up")"></i>
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["UnloadingDateSortParm"]">
+                    @Html.DisplayNameFor(model => model.UnloadingDateTime)
+                    <i class="fas @(ViewData["UnloadingDateSortParm"].ToString().EndsWith("desc") ? "fa-sort-down" : "fa-sort-up")"></i>
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]">
+                    @Html.DisplayNameFor(model => model.Status)
+                    <i class="fas @(ViewData["StatusSortParm"].ToString().EndsWith("desc") ? "fa-sort-down" : "fa-sort-up")"></i>
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoadingLocation.Street),
+                    @Html.DisplayFor(modelItem => item.LoadingLocation.Number),
+                    @Html.DisplayFor(modelItem => item.LoadingLocation.PostalCode),
+                    @Html.DisplayFor(modelItem => item.LoadingLocation.City),
+                    @Html.DisplayFor(modelItem => item.LoadingLocation.Country)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnloadingLocation.Street),
+                    @Html.DisplayFor(modelItem => item.UnloadingLocation.Number),
+                    @Html.DisplayFor(modelItem => item.UnloadingLocation.PostalCode),
+                    @Html.DisplayFor(modelItem => item.UnloadingLocation.City),
+                    @Html.DisplayFor(modelItem => item.UnloadingLocation.Country)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoadingDateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnloadingDateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if (item.Status.ToString() == "Pending")
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (item.Status.ToString() == "Pending")
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

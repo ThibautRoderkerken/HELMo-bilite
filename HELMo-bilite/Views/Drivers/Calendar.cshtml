@@ -1,0 +1,90 @@
+﻿
+
+@{
+    ViewData["Title"] = "Mon agenda";
+}
+
+<h1>My calendar</h1>
+
+<div id='calendar'></div>
+
+<div class="modal" id="eventModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Détails de la livraison</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="deliveryContent"></p>
+                <p id="loadingLocation"></p>
+                <p id="loadingDateTime"></p>
+                <p id="unloadingLocation"></p>
+                <p id="unloadingDateTime"></p>
+                <form id="deliveryForm" method="post" action="/Drivers/ManageDelivery">
+                    <input id="deliveryId" name="deliveryId" type="hidden" value="" />
+                    <button type="submit" class="btn btn-primary">Manage delivery</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridWeek',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                },
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    fetch('/Drivers/Deliveries')
+                        .then(response => response.json())
+                        .then(deliveries => {
+                            var events = deliveries.map(function (delivery) {
+                                return {
+                                    title: delivery.deliveryContent,
+                                    start: delivery.loadingDateTime,
+                                    end: delivery.unloadingDateTime,
+                                    extendedProps: delivery
+                                };
+                            });
+                            successCallback(events);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            failureCallback(error);
+                        });
+                },
+                eventClick: function (info) {
+                    var delivery = info.event.extendedProps;
+                    document.getElementById('deliveryContent').textContent = 'Delivery content: ' + delivery.deliveryContent;
+                    document.getElementById('loadingLocation').textContent = 'Loading location: ' + delivery.loadingLocation.street + ' ' + delivery.loadingLocation.number + ', ' + delivery.loadingLocation.postalCode + ' ' + delivery.loadingLocation.city + ', ' + delivery.loadingLocation.country;
+                    document.getElementById('loadingDateTime').textContent = 'Loading date and time: ' + delivery.loadingDateTime;
+                    document.getElementById('unloadingLocation').textContent = 'Unloading location: ' + delivery.unloadingLocation.street + ' ' + delivery.unloadingLocation.number + ', ' + delivery.unloadingLocation.postalCode + ' ' + delivery.unloadingLocation.city + ', ' + delivery.unloadingLocation.country;
+                    document.getElementById('unloadingDateTime').textContent = 'Unloading date and time: ' + delivery.unloadingDateTime;
+                    document.getElementById('deliveryId').value = delivery.id; 
+                    $('#eventModal').modal('show');
+                }
+
+            });
+
+            calendar.render();
+        });
+
+        $(document).ready(function () {
+            $(".close").click(function () {
+                $("#eventModal").modal('hide');
+            });
+        });
+
+    </script>
+}

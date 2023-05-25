@@ -1,0 +1,43 @@
+﻿@model IEnumerable<HELMo_bilite.ViewModels.Admins.EditLicenseViewModel>
+
+@{
+    ViewData["Title"] = "ManageLicenses";
+}
+
+<h1>Manage Licenses</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LicenseType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LicenseType)
+                </td>
+                <td>
+                    <a asp-action="EditLicense" asp-route-id="@item.UserId">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

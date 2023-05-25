@@ -1,0 +1,91 @@
+﻿@model IEnumerable<HELMo_bilite.ViewModels.Deliveries.DeliveryViewModel>
+
+@{
+    ViewData["Title"] = "Livraisons en attente";
+}
+
+<h1>Livraisons en attente</h1>
+<a asp-action="Pending" class="btn btn-primary">Actualiser</a>
+<p>Actualisation automatique toutes les 30 secondes</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LoadingLocation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnloadingLocation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoadingDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnloadingDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (item.Status == DeliveryStatus.Pending)
+            {
+                <tr class="@((item.Tagged == true) ? "tagged" : "")">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LoadingLocation.Street),
+                        @Html.DisplayFor(modelItem => item.LoadingLocation.Number),
+                        @Html.DisplayFor(modelItem => item.LoadingLocation.PostalCode),
+                        @Html.DisplayFor(modelItem => item.LoadingLocation.City),
+                        @Html.DisplayFor(modelItem => item.LoadingLocation.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnloadingLocation.Street),
+                        @Html.DisplayFor(modelItem => item.UnloadingLocation.Number),
+                        @Html.DisplayFor(modelItem => item.UnloadingLocation.PostalCode),
+                        @Html.DisplayFor(modelItem => item.UnloadingLocation.City),
+                        @Html.DisplayFor(modelItem => item.UnloadingLocation.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeliveryContent)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LoadingDateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnloadingDateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    @if (item.Tagged == true)
+                    {
+                        <td>
+                             <p>Mauvais payeur</p>
+                        </td>
+                    } else
+                    {
+                        <td>
+                            <a asp-action="Assign" asp-route-id="@item.Id">Assigner</a>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+        // Rafraîchir la page toutes les 30 secondes
+        setTimeout(function () {
+            location.reload();
+        }, 30000);
+    </script>
+}

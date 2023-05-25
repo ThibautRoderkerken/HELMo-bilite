@@ -1,0 +1,54 @@
+﻿@model Delivery
+
+@{
+    ViewData["Title"] = "Manage Delivery";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container">
+    <form method="post" action="/Drivers/UpdateDeliveryStatus">
+        <input type="hidden" name="deliveryId" value="@Model.Id" />
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="deliveryStatus" id="deliverySuccess" value="Delivered" checked>
+                <label class="form-check-label" for="deliverySuccess">
+                    Delivery successful
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="deliveryStatus" id="deliveryFailed" value="Failed">
+                <label class="form-check-label" for="deliveryFailed">
+                    Delivery failed
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="failedReason">Failed reason</label>
+            <select class="form-control" id="failedReason" name="failedReason" disabled>
+                <option>Disease</option>
+                <option>Accident</option>
+                <option>Client absent / Impossible to deliver</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="comments">Comments</label>
+            <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update delivery status</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('input[type=radio][name=deliveryStatus]').change(function () {
+                if (this.value == 'Failed') {
+                    $('#failedReason').prop('disabled', false);
+                } else {
+                    $('#failedReason').prop('disabled', true);
+                }
+            });
+        });
+    </script>
+}

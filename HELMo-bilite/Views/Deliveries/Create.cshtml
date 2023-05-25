@@ -1,0 +1,101 @@
+﻿@model HELMo_bilite.ViewModels.Deliveries.CreateDeliveryViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Delivery</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <h5>Loading Location</h5>
+            <div class="form-group">
+                <label asp-for="LoadingLocation.Street" class="control-label"></label>
+                <input asp-for="LoadingLocation.Street" class="form-control" />
+                <span asp-validation-for="LoadingLocation.Street" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoadingLocation.Number" class="control-label"></label>
+                <input asp-for="LoadingLocation.Number" class="form-control" />
+                <span asp-validation-for="LoadingLocation.Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoadingLocation.City" class="control-label"></label>
+                <input asp-for="LoadingLocation.City" class="form-control" />
+                <span asp-validation-for="LoadingLocation.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoadingLocation.PostalCode" class="control-label"></label>
+                <input asp-for="LoadingLocation.PostalCode" class="form-control" />
+                <span asp-validation-for="LoadingLocation.PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoadingLocation.Country" class="control-label"></label>
+                <input asp-for="LoadingLocation.Country" class="form-control" />
+                <span asp-validation-for="LoadingLocation.Country" class="text-danger"></span>
+            </div>
+            
+            <h5>Unloading Location</h5>
+            <div class="form-group">
+                <label asp-for="UnloadingLocation.Street" class="control-label"></label>
+                <input asp-for="UnloadingLocation.Street" class="form-control" />
+                <span asp-validation-for="UnloadingLocation.Street" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnloadingLocation.Number" class="control-label"></label>
+                <input asp-for="UnloadingLocation.Number" class="form-control" />
+                <span asp-validation-for="UnloadingLocation.Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnloadingLocation.City" class="control-label"></label>
+                <input asp-for="UnloadingLocation.City" class="form-control" />
+                <span asp-validation-for="UnloadingLocation.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnloadingLocation.PostalCode" class="control-label"></label>
+                <input asp-for="UnloadingLocation.PostalCode" class="form-control" />
+                <span asp-validation-for="UnloadingLocation.PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnloadingLocation.Country" class="control-label"></label>
+                <input asp-for="UnloadingLocation.Country" class="form-control" />
+                <span asp-validation-for="UnloadingLocation.Country" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DeliveryContent" class="control-label"></label>
+                <input asp-for="DeliveryContent" class="form-control" />
+                <span asp-validation-for="DeliveryContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoadingDateTime" class="control-label"></label>
+                <input asp-for="LoadingDateTime" class="form-control" />
+                <span asp-validation-for="LoadingDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnloadingDateTime" class="control-label"></label>
+                <input asp-for="UnloadingDateTime" class="form-control" />
+                <span asp-validation-for="UnloadingDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

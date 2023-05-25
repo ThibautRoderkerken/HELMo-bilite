@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to HELMo-bilite</h1>
+    <p class="lead">
+        Discover our road transport branch, our fleet, our teams, and our expertise.<br />
+        We are able to offer you bulk freight transport services, in containers, on pallets, in parcels, etc. And this throughout Europe.<br />
+        Our fleet currently consists of 10 trucks, you can find an overview of it below.
+    </p>
+</div>
+
+<div class="container acceuil">
+    <h2>Our Vehicles</h2>
+    @if (ViewBag.Images != null)
+    {
+        <div class="flotte-camions">
+            @{
+                <!-- Liste de 4 marque de camions -->
+                var listeMarque = new List<string>();
+                listeMarque.Add("DAF");
+                listeMarque.Add("Mercedes");
+                listeMarque.Add("Scania");
+                listeMarque.Add("Volvo");
+
+                <!-- Liste de 4 tonnage de camions -->
+                var listeTonnage = new List<string>();
+                listeTonnage.Add("3.5");
+                listeTonnage.Add("7.5");
+                listeTonnage.Add("12");
+                listeTonnage.Add("19");
+
+                <!-- Liste de 4 quantité avec un total de 10 camions -->
+                var listeQuantite = new List<int>();
+                listeQuantite.Add(3);
+                listeQuantite.Add(2);
+                listeQuantite.Add(3);
+                listeQuantite.Add(2);
+
+                var i = 0;
+            }
+
+            @foreach (var image in ViewBag.Images)
+            {
+                <div class="size-images">
+                    <p>@listeMarque[i] (@listeTonnage[i] T) <br>
+                    Quantity : @listeQuantite[i++]
+                    </p>
+                    <img src="@Url.Content("~/images/trucks/" + image)" alt="Truck Image" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>@ViewBag.Message</p>
+    }
+
+    <h2>Our Team</h2>
+    <p>
+        Our team is composed of road transport professionals, committed to providing quality service and meeting deadlines.<br />
+        We currently have 15 drivers ready to hit the road for you.
+    </p>
+    <div class="equipe">
+        <img src="~/images/equipe1.jpg" alt="Équipe 1" />
+        <img src="~/images/equipe2.jpg" alt="Équipe 2" />
+    </div>
+
+    <h2>Our Expertise</h2>
+    <p>
+        We have recognized expertise in the field of road transport, and we do everything to ensure the satisfaction of our clients.<br />
+        Whether it's regular, occasional, or urgent transport, we will do everything to satisfy you.
+    </p>
+    <div class="savoir-faire">
+        <img src="~/images/savoir-faire1.jpg" alt="Savoir-faire 1" />
+        <img src="~/images/savoir-faire2.jpg" alt="Savoir-faire 2" />
+        <img src="~/images/savoir-faire3.jpg" alt="Savoir-faire 3" />
+    </div>
+
+    <h2>They Trust Us</h2>
+    <p></p>
+    <div class="client-logos">
+        <img src="~/images/client1.jpg" alt="Client 1" />
+        <img src="~/images/client2.jpg" alt="Client 2" />
+    </div>
+</div>

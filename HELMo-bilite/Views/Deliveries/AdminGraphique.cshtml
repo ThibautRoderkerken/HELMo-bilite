@@ -1,0 +1,209 @@
+﻿@model HELMo_bilite.ViewModels.Deliveries.AdminGraphiqueViewModel
+@{
+    ViewData["Title"] = "HELMo Admin panel";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+
+
+<h1>HELMo Admin panel</h1>
+
+<h2>Deliveries table</h2>
+<table id="deliveriesTable" class="display">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Client</th>
+            <th>Loading location</th>
+            <th>Delivery location</th>
+            <th>Loading date</th>
+            <th>Delivery date</th>
+            <th style="display:none">Delivery content</th>
+            <th>Delivery status</th>
+            <th>Driver</th>
+            <th>Truck</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var delivery in Model.Deliveries)
+        {
+            <tr>
+                <td></td>
+                <td>@delivery.Client.CompanyName</td>
+                <td>@delivery.LoadingLocation.Street @delivery.LoadingLocation.Number, @delivery.LoadingLocation.PostalCode @delivery.LoadingLocation.City, @delivery.LoadingLocation.Country</td>
+                <td>@delivery.UnloadingLocation.Street @delivery.UnloadingLocation.Number, @delivery.UnloadingLocation.PostalCode @delivery.UnloadingLocation.City, @delivery.UnloadingLocation.Country</td>
+                <td>@delivery.LoadingDateTime</td>
+                <td>@delivery.UnloadingDateTime</td>
+                <td style="display:none">@delivery.DeliveryContent</td>
+                <td>@delivery.Status</td>
+                <td>@(delivery.Driver != null ? delivery.Driver.LastName + " " + delivery.Driver.FirstName : "No driver")</td>
+                <td>@(delivery.Truck != null ? delivery.Truck.LicensePlate : "No license plate")</td>
+            </tr>
+        }
+        <!-- Ajoutez autant de lignes que nécessaire -->
+    </tbody>
+</table>
+
+<div class="chart-container">
+    <div class="chart-box">
+        <h2>Deliveries by driver</h2>
+        <canvas id="driverChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h2>Deliveries by date</h2>
+        <canvas id="dateChart"></canvas>
+    </div>
+
+    <div>
+        <h2>Deliveries by client</h2>
+        <canvas id="clientChart"></canvas>
+    </div>
+</div>
+
+
+
+<script>
+    function format(d) {
+
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+            '<tr>' +
+            '<td>Delivery content:</td>' +
+            '<td>' + d[6] + '</td>' +
+            '</tr>' +
+            '</table>';
+    }
+
+    $(document).ready(function () {
+        var table = $('#deliveriesTable').DataTable({
+            "searching": true,
+            "paging": true,
+            "info": true,
+            "columns": [
+                {
+                    "className": 'details-control',
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": '+'
+                },
+                { "data": "1" },
+                { "data": "2" },
+                { "data": "3" },
+                { "data": "4" },
+                { "data": "5" },
+                { "data": "6" },
+                { "data": "7" },
+                { "data": "8" },
+                { "data": "9" }
+            ],
+            "order": [[1, 'asc']]
+        });
+
+        // Add event listener for opening and closing details
+        $('#deliveriesTable tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+            }
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+<script>
+    // Livraisons par chauffeur
+    new Chart(document.getElementById('driverChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: @Json.Serialize(Model.DeliveriesByDriver.Select(d => d.Key)),
+            datasets: [{
+                label: 'Nombre de livraisons',
+                data: @Json.Serialize(Model.DeliveriesByDriver.Select(d => d.Count())),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+
+    // Livraisons par date
+    new Chart(document.getElementById('dateChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: @Json.Serialize(Model.DeliveriesByDate.Select(d => d.Key.ToShortDateString())),
+            datasets: [{
+                label: 'Nombre de livraisons',
+                data: @Json.Serialize(Model.DeliveriesByDate.Select(d => d.Count())),
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+
+    // Livraisons par client
+    new Chart(document.getElementById('clientChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: @Json.Serialize(Model.DeliveriesByClient.Select(d => d.Key.CompanyName)),
+            datasets: [{
+                label: 'Nombre de livraisons',
+                data: @Json.Serialize(Model.DeliveriesByClient.Select(d => d.Count())),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+
+    $(document).ready(function () {
+        $('#deliveriesTable').DataTable();
+    });
+</script>

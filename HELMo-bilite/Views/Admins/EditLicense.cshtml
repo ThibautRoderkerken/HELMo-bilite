@@ -1,0 +1,37 @@
+﻿@model HELMo_bilite.ViewModels.Admins.EditLicenseViewModel
+
+@{
+    ViewData["Title"] = "EditLicense";
+}
+
+<h1>Edit License</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditLicense">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="FirstName" />
+            <input type="hidden" asp-for="LastName" />
+
+            <h5>Driver</h5>
+            @Html.DisplayFor(model => model.FirstName)<br />
+            @Html.DisplayFor(model => model.LastName)<br />
+            <h5>Change License</h5>
+
+            <div class="form-group">
+                <label asp-for="LicenseType"></label>
+                <select asp-for="LicenseType" asp-items="Html.GetEnumSelectList<LicenseType>()" class="form-control">
+                <option value="">No license</option>
+                </select>
+                <span asp-validation-for="LicenseType" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
