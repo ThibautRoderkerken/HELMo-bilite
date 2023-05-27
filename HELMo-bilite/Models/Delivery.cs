@@ -53,7 +53,6 @@ namespace HELMo_bilite.Models
         public string? Comments { get; internal set; }
         public string? FailedReason { get; internal set; }
 
-        // Client non obligatoire
         [Display(Name = "Client")]
         public Client? Client { get; set; }
     }

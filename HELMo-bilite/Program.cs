@@ -18,7 +18,8 @@ builder.Services.AddRazorPages()
     });
 
 builder.Services.AddDbContext<HELMoBiliteDbContext>(options =>
-    options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=HELMoBilite;Trusted_Connection=True;"));
+        options.UseSqlServer(@"Data Source=192.168.128.18;Initial Catalog=in21b10040;User ID=in21b10040;Password=0040;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
+
 
 builder.Services.AddDefaultIdentity<User>(options =>
 {
