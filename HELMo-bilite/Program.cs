@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HELMo_bilite.Data;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +19,8 @@ builder.Services.AddRazorPages()
         options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/Index", "Account/Manage/Index");
     });
 
-builder.Services.AddDbContext<HELMoBiliteDbContext>(options =>
-        options.UseSqlServer(@"Data Source=192.168.128.18;Initial Catalog=in21b10040;User ID=in21b10040;Password=0040;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"));
-
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<HELMoBiliteDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<User>(options =>
 {
@@ -84,7 +85,5 @@ using (var scope = scopeFactory.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<HELMoBiliteDbContext>();
     await DataInitializer.Initialize(userManager, roleManager, dbContext);
 }
-
-
 
 app.Run();
