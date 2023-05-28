@@ -50,7 +50,10 @@
             @Html.DisplayNameFor(model => model.CompanyLogoPath)
         </dt>
         <dd class="col-sm-10">
-            <img src="@Model.CompanyLogoPath" alt="Company Logo" style="max-width:100%; height:auto;" />
+            @if (Model.CompanyLogoPath != null)
+            {
+                <img src="@Model.CompanyLogoPath" alt="Logo de la société" />
+            }
         </dd>
     </dl>
 </div>
