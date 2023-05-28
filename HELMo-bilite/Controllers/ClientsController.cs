@@ -71,51 +71,51 @@ namespace HELMo_bilite.Controllers
 
         // POST: Clients/Register
         [AllowAnonymous]
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Register(RegisterClientViewModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterClientViewModel model)
+        {
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var user = new User { UserName = model.Email, Email = model.Email };
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
                 {
-                    var user = new User { UserName = model.Email, Email = model.Email };
-                    var result = await _userManager.CreateAsync(user, model.Password);
-
-                    if (result.Succeeded)
+                    // Create a new Client instance
+                    var client = new Client
                     {
-                        // Create a new Client instance
-                        var client = new Client
-                        {
-                            UserId = user.Id,
-                            CompanyName = model.CompanyName,
-                            Street = model.Street,
-                            Number = model.Number,
-                            City = model.City,
-                            PostalCode = model.PostalCode,
-                            Country = model.Country
-                        };
+                        UserId = user.Id,
+                        CompanyName = model.CompanyName,
+                        Street = model.Street,
+                        Number = model.Number,
+                        City = model.City,
+                        PostalCode = model.PostalCode,
+                        Country = model.Country
+                    };
 
-                        // Add the client to the Clients table
-                        _context.Add(client);
+                    // Add the client to the Clients table
+                    _context.Add(client);
 
-                        // Assign the client role to the user
-                        await _userManager.AddToRoleAsync(user, "Client");
+                    // Assign the client role to the user
+                    await _userManager.AddToRoleAsync(user, "Client");
 
-                        await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
-                        // Sign in the user here
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                    // Sign in the user here
+                    await _signInManager.SignInAsync(user, isPersistent: false);
 
-                        return RedirectToAction(nameof(Index));
-                    }
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                    return RedirectToAction(nameof(Details));
                 }
-
-                // If we got this far, something failed, redisplay form
-                return View(model);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
 
 
         [Authorize]

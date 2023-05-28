@@ -106,7 +106,7 @@ namespace HELMo_bilite.Controllers
 
                     await _context.SaveChangesAsync();
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Details));
                 }
                 foreach (var error in result.Errors)
                 {
