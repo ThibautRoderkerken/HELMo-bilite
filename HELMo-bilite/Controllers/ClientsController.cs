@@ -232,7 +232,7 @@ namespace HELMo_bilite.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(model);
         }
