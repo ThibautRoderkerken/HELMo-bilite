@@ -214,7 +214,10 @@ namespace HELMo_bilite.Controllers
                             await model.NewCompanyLogo.CopyToAsync(stream);
                         }
 
-                        client.CompanyLogoPath = "/images/clients/" + fileName;
+                        // If the application is running in production, prefix the image URL with '/Q210040'
+                        var imageUrlPrefix = _hostingEnvironment.IsProduction() ? "/Q210040" : "";
+
+                        client.CompanyLogoPath = imageUrlPrefix + "/images/clients/" + fileName;
                     }
 
 
@@ -236,6 +239,7 @@ namespace HELMo_bilite.Controllers
             }
             return View(model);
         }
+
 
         [Authorize(Roles = "Admin")]
         // GET: Clients/Delete/5

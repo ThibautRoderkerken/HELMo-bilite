@@ -153,16 +153,21 @@ namespace HELMo_bilite.Controllers
         // POST: Drivers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(string id, EditDriverViewModel model)
         {
+            // Check if the user is authenticated
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
+                // Not authenticated
                 return Forbid();
             }
 
+            // Check if the user is the one being edited
             if (currentUser.Id != id)
             {
+                // Not authorized
                 return Forbid();
             }
 
@@ -178,30 +183,35 @@ namespace HELMo_bilite.Controllers
                         return NotFound();
                     }
 
+                    // Copy the fields that we want to update
                     driver.Matricule = model.Matricule;
                     driver.LastName = model.LastName;
                     driver.FirstName = model.FirstName;
                     driver.LicenseType = model.LicenseType;
                     driver.DateOfBirth = model.DateOfBirth;
 
+                    // Handle the uploaded file
                     if (model.NewPhoto != null)
                     {
-                        var dirPath = Path.Combine(_hostingEnvironment.WebRootPath, "images/drivers");
-                        var fileName = Guid.NewGuid().ToString() + "_" + model.NewPhoto.FileName;
+                        var fileName = Path.GetFileName(model.NewPhoto.FileName);
+                        var dirPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "drivers");
                         var filePath = Path.Combine(dirPath, fileName);
 
+                        // Check if the directory exists and create it if not
                         if (!Directory.Exists(dirPath))
                         {
                             Directory.CreateDirectory(dirPath);
                         }
 
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        using (var stream = new FileStream(filePath, FileMode.Create))
                         {
-                            await model.NewPhoto.CopyToAsync(fileStream);
+                            await model.NewPhoto.CopyToAsync(stream);
                         }
 
-                        // update the photo path of the driver
-                        driver.Photo = "/images/drivers/" + fileName;
+                        // If the application is running in production, prefix the image URL with '/Q210040'
+                        var imageUrlPrefix = _hostingEnvironment.IsProduction() ? "/Q210040" : "";
+
+                        driver.Photo = imageUrlPrefix + "/images/drivers/" + fileName;
                     }
 
                     _context.Update(driver);
@@ -209,7 +219,7 @@ namespace HELMo_bilite.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DriverExists(driver.UserId))
+                    if (!DriverExists(driver?.UserId))
                     {
                         return NotFound();
                     }

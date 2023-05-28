@@ -75,7 +75,7 @@ namespace HELMo_bilite.Controllers
             return View(AdminGraphique);
         }
 
-        // GET: Deliveries
+        // GET: Index
         public async Task<IActionResult> Index(string sortOrder)
         {
             ViewData["LoadingDateSortParm"] = sortOrder == "loading_date" ? "loading_date_desc" : "loading_date";
@@ -129,7 +129,7 @@ namespace HELMo_bilite.Controllers
             return View(await deliveriesForCurrentUser.ToListAsync());
         }
 
-        // GET: Deliveries
+        // GET: Admin
         public async Task<IActionResult> Admin(string sortOrder)
         {
             // Récupérer la liste des livraisons

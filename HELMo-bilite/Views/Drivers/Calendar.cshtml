@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
     ViewData["Title"] = "Mon agenda";
 }
 
@@ -23,7 +21,7 @@
                 <p id="loadingDateTime"></p>
                 <p id="unloadingLocation"></p>
                 <p id="unloadingDateTime"></p>
-                <form id="deliveryForm" method="post" action="/Drivers/ManageDelivery">
+                <form id="deliveryForm" method="post" action="@Context.Request.PathBase.Value/Drivers/ManageDelivery">
                     <input id="deliveryId" name="deliveryId" type="hidden" value="" />
                     <button type="submit" class="btn btn-primary">Manage delivery</button>
                 </form>
@@ -37,6 +35,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
+            var baseUrl = '@Context.Request.PathBase.Value';
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridWeek',
@@ -46,7 +45,7 @@
                     right: 'dayGridMonth,dayGridWeek,dayGridDay'
                 },
                 events: function (fetchInfo, successCallback, failureCallback) {
-                    fetch('/Drivers/Deliveries')
+                    fetch(baseUrl + '/Drivers/Deliveries')
                         .then(response => response.json())
                         .then(deliveries => {
                             var events = deliveries.map(function (delivery) {
@@ -71,7 +70,7 @@
                     document.getElementById('loadingDateTime').textContent = 'Loading date and time: ' + delivery.loadingDateTime;
                     document.getElementById('unloadingLocation').textContent = 'Unloading location: ' + delivery.unloadingLocation.street + ' ' + delivery.unloadingLocation.number + ', ' + delivery.unloadingLocation.postalCode + ' ' + delivery.unloadingLocation.city + ', ' + delivery.unloadingLocation.country;
                     document.getElementById('unloadingDateTime').textContent = 'Unloading date and time: ' + delivery.unloadingDateTime;
-                    document.getElementById('deliveryId').value = delivery.id; 
+                    document.getElementById('deliveryId').value = delivery.id;
                     $('#eventModal').modal('show');
                 }
 

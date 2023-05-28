@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\images\dispatchers\" />
+    <Folder Include="wwwroot\images\drivers\" />
   </ItemGroup>
 
 </Project>

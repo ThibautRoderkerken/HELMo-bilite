@@ -184,8 +184,8 @@ namespace HELMo_bilite.Controllers
 
                     if (model.NewPhoto != null)
                     {
-                        var dirPath = Path.Combine(_hostingEnvironment.WebRootPath, "images/dispatchers");
-                        var fileName = Guid.NewGuid().ToString() + "_" + model.NewPhoto.FileName;
+                        var fileName = Path.GetFileName(model.NewPhoto.FileName);
+                        var dirPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "dispatchers");
                         var filePath = Path.Combine(dirPath, fileName);
 
                         if (!Directory.Exists(dirPath))
@@ -198,8 +198,10 @@ namespace HELMo_bilite.Controllers
                             await model.NewPhoto.CopyToAsync(fileStream);
                         }
 
-                        // update the photo path of the dispatcher
-                        dispatcher.Photo = "/images/dispatchers/" + fileName;
+                        // If the application is running in production, prefix the image URL with '/Q210040'
+                        var imageUrlPrefix = _hostingEnvironment.IsProduction() ? "/Q210040" : "";
+
+                        dispatcher.Photo = imageUrlPrefix + "/images/dispatchers/" + fileName;
                     }
 
                     _context.Update(dispatcher);
@@ -220,6 +222,7 @@ namespace HELMo_bilite.Controllers
             }
             return View(model);
         }
+
 
         // GET: Dispatchers/Delete/5
         public async Task<IActionResult> Delete(string id)
