@@ -33,18 +33,20 @@
             <input type="hidden" asp-for="Delivery.UnloadingDateTime" />
 
             <h5>Loading location</h5>
-            @Model.Delivery.LoadingLocation.Street 
+            @Model.Delivery.LoadingLocation.Street
             @Model.Delivery.LoadingLocation.Number,
             @Model.Delivery.LoadingLocation.City
             @Model.Delivery.LoadingLocation.PostalCode,
             @Model.Delivery.LoadingLocation.Country</p>
 
             <h5>Unloading location</h5>
-            <p>@Model.Delivery.UnloadingLocation.Street
-            @Model.Delivery.UnloadingLocation.Number,
-            @Model.Delivery.UnloadingLocation.City
-            @Model.Delivery.UnloadingLocation.PostalCode,
-            @Model.Delivery.UnloadingLocation.Country</p>
+            <p>
+                @Model.Delivery.UnloadingLocation.Street
+                @Model.Delivery.UnloadingLocation.Number,
+                @Model.Delivery.UnloadingLocation.City
+                @Model.Delivery.UnloadingLocation.PostalCode,
+                @Model.Delivery.UnloadingLocation.Country
+            </p>
 
             <h5>Delivery content</h5>
             <p>@Model.Delivery.DeliveryContent</p>
@@ -55,14 +57,15 @@
             <h5>Assign Driver and Truck</h5>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" asp-items="Model.Drivers" class="form-control"></select>
+                <select id="driverSelect" asp-for="UserId" asp-items="Model.Drivers" class="form-control"></select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TruckId" class="control-label"></label>
-                <select asp-for="TruckId" asp-items="Model.Trucks" class="form-control"></select>
+                <select id="truckSelect" asp-for="TruckId" asp-items="Model.Trucks" class="form-control"></select>
                 <span asp-validation-for="TruckId" class="text-danger"></span>
             </div>
+
             @if (hasDrivers && hasTrucks)
             {
                 <div class="form-group">
@@ -87,4 +90,26 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            var allTrucks = @Html.Raw(Json.Serialize(Model.Trucks));
+
+            $('#driverSelect').change(function () {
+                var selectedDriver = $(this).children("option:selected").text();
+                var lastChar = selectedDriver.slice(-1);
+
+                console.log(selectedDriver);
+                console.log(lastChar);
+                var suitableTrucks = lastChar === 'E' ? allTrucks : allTrucks.filter(function (truck) {
+                    return truck.text.slice(-1) === 'C';
+                });
+
+                var $truckSelect = $('#truckSelect');
+                $truckSelect.empty();
+                $.each(suitableTrucks, function (index, truck) {
+                    $truckSelect.append(new Option(truck.text, truck.value));
+                });
+            });
+        });
+    </script>
 }

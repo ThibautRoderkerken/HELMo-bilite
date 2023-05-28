@@ -472,12 +472,13 @@ namespace HELMo_bilite.Controllers
                 Delivery = delivery,
                 UserId = availableDrivers.Any() ? availableDrivers.First().UserId : null,
                 TruckId = availableTrucks.Any() ? availableTrucks.First().Id : 0,
-                Drivers = new SelectList(availableDrivers, "UserId", "FirstName"),
-                Trucks = new SelectList(availableTrucks, "Id", "LicensePlate")
+                Drivers = new SelectList(availableDrivers.Select(d => new { d.UserId, Description = $"{d.FirstName} {d.LastName} - {d.LicenseType}" }), "UserId", "Description"),
+                Trucks = new SelectList(availableTrucks.Select(t => new { t.Id, Description = $"{t.LicensePlate} - {t.Brand} - {t.Model} - {t.Type}" }), "Id", "Description")
             };
 
             return View(assignDeliveryViewModel);
         }
+
 
         // POST: Deliveries/Assign/5
         [HttpPost]
