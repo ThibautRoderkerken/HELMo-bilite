@@ -103,6 +103,13 @@ body {
     justify-content: center;
 }
 
+.client-logos .client-logo {
+    width: 24%;
+    height: auto;
+    object-fit: cover;
+}
+
+
 @media screen and (max-width: 768px) {
     .chart-box {
         flex: 0 0 100%;

@@ -13,25 +13,22 @@
 
 <div class="container acceuil">
     <h2>Our Vehicles</h2>
-    @if (ViewBag.Images != null)
+    @if (ViewBag.TruckImages != null)
     {
         <div class="flotte-camions">
             @{
-                <!-- Liste de 4 marque de camions -->
                 var listeMarque = new List<string>();
                 listeMarque.Add("DAF");
                 listeMarque.Add("Mercedes");
                 listeMarque.Add("Scania");
                 listeMarque.Add("Volvo");
 
-                <!-- Liste de 4 tonnage de camions -->
                 var listeTonnage = new List<string>();
                 listeTonnage.Add("3.5");
                 listeTonnage.Add("7.5");
                 listeTonnage.Add("12");
                 listeTonnage.Add("19");
 
-                <!-- Liste de 4 quantité avec un total de 10 camions -->
                 var listeQuantite = new List<int>();
                 listeQuantite.Add(3);
                 listeQuantite.Add(2);
@@ -41,11 +38,12 @@
                 var i = 0;
             }
 
-            @foreach (var image in ViewBag.Images)
+            @foreach (var image in ViewBag.TruckImages)
             {
                 <div class="size-images">
-                    <p>@listeMarque[i] (@listeTonnage[i] T) <br>
-                    Quantity : @listeQuantite[i++]
+                    <p>
+                        @listeMarque[i] (@listeTonnage[i] T) <br>
+                        Quantity : @listeQuantite[i++]
                     </p>
                     <img src="@Url.Content("~/images/trucks/" + image)" alt="Truck Image" />
                 </div>
@@ -54,7 +52,7 @@
     }
     else
     {
-        <p>@ViewBag.Message</p>
+        <p>@ViewBag.TruckMessage</p>
     }
 
     <h2>Our Team</h2>
@@ -80,8 +78,18 @@
 
     <h2>They Trust Us</h2>
     <p></p>
-    <div class="client-logos">
-        <img src="~/images/client1.jpg" alt="Client 1" />
-        <img src="~/images/client2.jpg" alt="Client 2" />
-    </div>
+    @if (ViewBag.ClientImages != null)
+    {
+        <div class="client-logos">
+            @foreach (var image in ViewBag.ClientImages)
+            {
+                <img class="client-logo" src="@Url.Content("~/images/clients/" + image)" alt="Client Image" />
+            }
+        </div>
+
+    }
+    else
+    {
+        <p>@ViewBag.ClientMessage</p>
+    }
 </div>

@@ -23,23 +23,33 @@ namespace HELMo_bilite.Controllers
         public IActionResult Index()
         {
             string wwwRootPath = _hostEnvironment.WebRootPath;
-            string imagePath = Path.Combine(wwwRootPath, "images", "trucks");
 
-            // Lire tous les fichiers dans le dossier
-            var imageFiles = Directory.GetFiles(imagePath).Select(Path.GetFileName).ToList();
+            // Get truck images
+            string truckImagePath = Path.Combine(wwwRootPath, "images", "trucks");
+            var truckImageFiles = Directory.GetFiles(truckImagePath).Select(Path.GetFileName).ToList();
 
-            // Si aucun fichier n'est présent, mettre un message dans ViewBag.Message
-            if (!imageFiles.Any())
+            if (!truckImageFiles.Any())
             {
-                ViewBag.Message = "Il n'y a pas d'images dans le système. Veuillez en ajouter.";
+                ViewBag.TruckMessage = "Il n'y a pas d'images des camions dans le système. Veuillez en ajouter.";
             }
             else
             {
-                // Récupérer les 4 premire image par ordre alphabétique
-                var selectedImages = imageFiles.OrderBy(f => f).Take(4);
+                var selectedTruckImages = truckImageFiles.OrderBy(f => f).Take(4);
+                ViewBag.TruckImages = selectedTruckImages;
+            }
 
-                // Passez les images à la vue
-                ViewBag.Images = selectedImages;
+            // Get client images
+            string clientImagePath = Path.Combine(wwwRootPath, "images", "clients");
+            var clientImageFiles = Directory.GetFiles(clientImagePath).Select(Path.GetFileName).ToList();
+
+            if (!clientImageFiles.Any())
+            {
+                ViewBag.ClientMessage = "Il n'y a pas d'images des clients dans le système. Veuillez en ajouter.";
+            }
+            else
+            {
+                var selectedClientImages = clientImageFiles.OrderBy(f => f);
+                ViewBag.ClientImages = selectedClientImages;
             }
 
             return View();
